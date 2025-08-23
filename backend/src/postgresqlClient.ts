@@ -10,14 +10,14 @@ export default class PostgreSQLClient {
 
     constructor() {
         this.client = new Client({
-            user: 'avnadmin' ,
-            password: 'AVNS_VCYfhVxb6iefC2rKTVE',
-            host: 'nutritrack-postgres-nutritrack-health-43.g.aivencloud.com',
+            user: process.env.POSTGRES_USER,
+            password: process.env.POSTGRES_PASSWORD,
+            host: process.env.POSTGRES_HOST_URL,
             port: 26554,
-            database: 'defaultdb',
+            database: process.env.POSTGRES_DATABASE_NAME,
             ssl: {
                 rejectUnauthorized: false,
-                ca: fs.readFileSync('./ca.pem').toString(),
+                ca: fs.readFileSync('./src/ca.pem').toString(),
             },
         });
     }

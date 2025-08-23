@@ -1,0 +1,15 @@
+Authentication
+- user id
+- user email
+- password
+
+User Details (with goals)
+- user id
+- user name
+- type
+- daily calories
+- current weight
+- target weight
+
+Meal Details
+- 

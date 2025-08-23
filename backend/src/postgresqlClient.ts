@@ -17,7 +17,7 @@ export default class PostgreSQLClient {
             database: process.env.POSTGRES_DATABASE_NAME,
             ssl: {
                 rejectUnauthorized: false,
-                ca: fs.readFileSync('./src/ca.pem').toString(),
+                ca: fs.readFileSync('./src/certificate.pem').toString(),
             },
         });
     }

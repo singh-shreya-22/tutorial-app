@@ -8,7 +8,8 @@ export const Header: React.FC<HeaderProps> = ({
   setShowAuth,
   setGoal,
   setMeals,
-  setNotifications
+  setNotifications,
+  setIsSignUp
 }) => {
   return (
     <header className="bg-white shadow-sm border-b">
@@ -30,6 +31,7 @@ export const Header: React.FC<HeaderProps> = ({
                   setCurrentUser(null);
                   setShowAuth(true);
                   setGoal(null);
+                  setIsSignUp(false);
                   setMeals([]);
                   setNotifications([]);
                 }}

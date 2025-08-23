@@ -68,7 +68,6 @@ export const CalorieTrackerApp : React.FC = () => {
         }
     }, [meals, goal]);
 
-    console.log("Show Auth: ", showAuth);
     if (showAuth) {
         return (
             <AuthenticationPage

@@ -60,6 +60,7 @@ interface HeaderProps {
     setGoal: React.Dispatch<React.SetStateAction<GoalDetails | null>>;
     setMeals: React.Dispatch<React.SetStateAction<Meal[]>>;
     setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>;
+    setIsSignup: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface NavigationTabsProps {

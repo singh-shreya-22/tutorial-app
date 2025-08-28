@@ -1,15 +1,20 @@
-Authentication
-- user id
-- user email
-- password
+- TODO
+1. For keeping the user logged-in even after refresh
+Way 1 - Easy
+Just store isLoggedIn variable in the localStorage and clear it after the user logs out.
+- Steps
+    1. Store both userId (if possible hash this) and logged-in information on localStorage, 
+        and make the database call to get currentUser fields.
+    2. Remove both fields after logout/expiry.
 
-User Details (with goals)
-- user id
-- user name
-- type
-- daily calories
-- current weight
-- target weight
-
-Meal Details
-- 
+Way 2 - Recommended
+1. Create a JWT token from backend (store it) for every logged-in session and send
+it back to frontend.
+(The cookies should be cleared after some time)
+2. Frontend will store the token + isLoggedIn variable in localStorage and for each 
+subsequent calls, the token will be passed along to the backend for correct
+authorization.
+3. To allow, subsequent log in from multiple device, allow multiple JWT token for a 
+single userId, but we will need to delete the JWT token periodically (this is not figured yet)
+4. If the token provided by frontend is not present in backend (not for signup/sigin calls), 
+reject the calls and logout the user.

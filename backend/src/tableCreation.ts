@@ -11,8 +11,16 @@ const query = `CREATE TABLE Authentication (
                 CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );`;
 
+const goalDetailQuery = `CREATE TABLE GoalDetails (
+                            id SERIAL,
+                            userid UUID PRIMARY KEY,
+                            type VARCHAR(255) NOT NULL,
+                            dailycalories REAL,
+                            currentweight REAL,
+                            targetweight REAL,
+                            CREATED_AT TIMESTAMP DEFAULT CURRENT_TIMESTAMP);`
 const deleteTableQuery = `DROP TABLE IF EXISTS Authentication;`; 
-const getRowsQuery = `SELECT * FROM Authentication;`;
+const getRowsQuery = `SELECT * FROM GoalDetails;`;
 client.queryExecutor(getRowsQuery).then(result => {
     console.log('Operation successful', result);
 }).catch(err => {

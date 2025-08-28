@@ -52,7 +52,7 @@ export default class AuthenticationOperations{
                 return [false, "", "", "User not found"]; // User not found
             }
             const hashedPassword = result.rows[0].password;
-            const userId = result.rows[0].userId;
+            const userId = result.rows[0].userid;
             const username = result.rows[0].username;
             const isMatch = await bcrypt.compare(password, hashedPassword); 
             if (isMatch) {

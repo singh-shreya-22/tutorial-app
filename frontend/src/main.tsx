@@ -4,7 +4,8 @@ import {CalorieTrackerApp} from './CalorieTrackerApp'
 import "./App.css"
 
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <CalorieTrackerApp />
-  </StrictMode>,
+      
+      <CalorieTrackerApp />
+      
 )
+

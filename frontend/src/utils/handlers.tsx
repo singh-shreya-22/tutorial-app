@@ -6,18 +6,38 @@ import type { AuthForm, MealForm } from "../interfaces/Forms";
 import { getNutritionalInfo } from "./commonUtils";
 import type { UserCredentials } from "../interfaces/UserCredentials";
 import type Meal from "../interfaces/MealDetails";
-import axios from "axios";  
+import api from '../api'
 
-export function handleGoalSetup(
+export async function handleGoalSetup(
     e: React.FormEvent, 
     setGoal: React.Dispatch<React.SetStateAction<GoalDetails | null>>,
     setShowGoalSetup: React.Dispatch<React.SetStateAction<boolean>>,
     goalForm: GoalDetails,
-    setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>
+    setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>,
+    setError: React.Dispatch<React.SetStateAction<string | null>>,
+    currentUser: UserDetails | null
 ) {
     e.preventDefault();
     setGoal(goalForm);
-    setShowGoalSetup(false);
+    const payloadBody = {
+      type: goalForm.type,
+      dailyCalories: goalForm.dailyCalories,
+      currentWeight: goalForm.currentWeight,
+      targetWeight: goalForm.targetWeight,
+      userId: currentUser?.userId
+    }
+    console.log(payloadBody)
+    try{
+      const response = await api.post("/goals/set", payloadBody);
+      console.log("Goals successfully set.")
+      setShowGoalSetup(false);
+    }
+    catch(error: any){
+      setError("Internal Server Error. Please try after some time.")
+    }
+
+
+    
     
     // Add welcome notification
     const notification: Notification = {
@@ -29,6 +49,36 @@ export function handleGoalSetup(
     setNotifications([notification]);
   };
 
+export async function handleGetGoal(
+  currentUser: UserDetails | null, 
+  setGoal: React.Dispatch<React.SetStateAction<GoalDetails | null>>
+) {
+    try{
+      if(currentUser != null){
+        console.log(currentUser, currentUser.userId);
+        api.post("/goals/get", {userId: currentUser.userId})
+          .then((response)=> {
+            console.log(response);
+            console.log("Successfully fetched goal details.");
+            const goalDetails: GoalDetails = {
+              type: response.data.type,
+              dailyCalories: response.data.dailyCalories,
+              currentWeight: response.data.currentWeight,
+              targetWeight: response.data.targetWeight
+            }
+            setGoal(goalDetails)
+          }).catch((error)=>{
+            console.log(error);
+            setGoal(null)
+          });
+      }
+      
+    }
+    catch(error){
+      setGoal(null)
+    }
+}
+
 export async function handleAuth(
     e: React.FormEvent,
     setCurrentUser: React.Dispatch<React.SetStateAction<UserDetails | null>>,
@@ -36,7 +86,7 @@ export async function handleAuth(
     setShowGoalSetup: React.Dispatch<React.SetStateAction<boolean>>,
     authForm: AuthForm,
     isSignUp: boolean,
-    setError: React.Dispatch<React.SetStateAction<string | null>>
+    setError: React.Dispatch<React.SetStateAction<string | null>>,
 ){
     e.preventDefault();
     const user: UserCredentials = {
@@ -44,17 +94,16 @@ export async function handleAuth(
         password: authForm.password,
         name: authForm.name 
     };
-
     if( isSignUp ) {
       console.log("Signing up user: ", user.email);
-      await axios.post('http://localhost:3000/auth/signup', user)
+      await api.post('/auth/signup', user)
           .then(response => {
             console.log('Sign up successful:');
             if(response.status == 200){
               const currentUser: UserDetails = {
                 name: response.data.user.name,
                 userId: response.data.user.userId,
-                email: response.data.user.email
+                email: response.data.user.mail
               }
               setCurrentUser(currentUser)
               setShowAuth(false)
@@ -73,18 +122,18 @@ export async function handleAuth(
     }
     else{
       console.log("Signing in user:", user.email);
-      await axios.post("http://localhost:3000/auth/signin", user).
+      await api.post("/auth/signin", user).
         then((response)=>{
           console.log("Sign-in successful.")
           if(response.status == 200){
             const currentUser: UserDetails = {
                 name: response.data.username,
                 userId: response.data.userId,
-                email: response.data.email
+                email: response.data.usermail
             }
             setCurrentUser(currentUser)
             setShowAuth(false)
-            setShowGoalSetup(false)
+            setShowGoalSetup(true)
           }
         }).catch((error)=>{
           console.log("error during sign-in", error)

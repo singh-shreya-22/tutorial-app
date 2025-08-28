@@ -1,15 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import type { GoalsPageProps } from "../props/AuthenticationPageProps";
+import { PencilIcon } from "lucide-react";
+import { handleGetGoal } from "../utils/handlers";
 
 const GoalsPage : React.FC<GoalsPageProps> = ({
     goal,
     progress,
+    setShowGoalSetup,
+    setGoal,
+    currentUser
 
 }) => {
+
+    useEffect(() =>{
+        // if()
+        console.log("use-effect called inside goals page.")
+        if(currentUser!=null) handleGetGoal(currentUser, setGoal)
+    }, [currentUser])
+
     return (
         <div className="space-y-6">
         <div className="bg-white rounded-xl p-6 shadow-lg">
-            <h3 className="font-semibold text-gray-700 mb-6">Your Goals</h3>
+            
+            <div className="flex justify-between items-center mb-6">
+                <h3 className="font-semibold text-gray-700">Your Goals</h3>
+                <button
+                    className="text-gray-500 hover:text-gray-700"
+                    onClick={() => setShowGoalSetup(true)}
+                >
+                    <PencilIcon size={20} />
+                </button>
+        </div>
             {goal && (
             <div className="space-y-6">
                 {/* Goal Overview */}

@@ -14,6 +14,7 @@ import GoalsPage from './components/GoalsPage';
 import { Header } from './components/Header';
 import { NavigationTabs } from './components/NavigationTabs';
 import MealsAdditionModal from './components/MealsAdditionModal';
+import { AuthProvider } from './context/AuthContext';
 
 export const CalorieTrackerApp : React.FC = () => {
     const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -25,7 +26,12 @@ export const CalorieTrackerApp : React.FC = () => {
     const [meals, setMeals] = useState<Meal[]>([]);
     const [showMealModal, setShowMealModal] = useState(false);
     const [notifications, setNotifications] = useState<Notification[]>([]);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+    // for storing the userId and logged-in information on local storage
+    useEffect(() => {
+
+    })
     // Form states
     const [authForm, setAuthForm] = useState({ email: '', password: '', name: '' });
     const [goalForm, setGoalForm] = useState({
@@ -90,6 +96,7 @@ export const CalorieTrackerApp : React.FC = () => {
                 setGoal={setGoal}
                 setShowGoalSetup={setShowGoalSetup}
                 setNotifications={setNotifications}
+                currentUser={currentUser}
             />
         );
     }
@@ -125,7 +132,7 @@ export const CalorieTrackerApp : React.FC = () => {
     return <RecommendationsPage goal={goal}/>
   }
   const renderGoals = () => (
-    <GoalsPage goal={goal} progress={progress} />
+    <GoalsPage goal={goal} progress={progress} setShowGoalSetup={setShowGoalSetup} setGoal={setGoal} currentUser={currentUser}/>
   );
   const renderMealsAdditionModal = () => (
     <MealsAdditionModal
@@ -141,32 +148,34 @@ export const CalorieTrackerApp : React.FC = () => {
 
     return (
         // Header
-        <div className="min-h-screen bg-gray-50">
-            <Header
-                currentUser={currentUser}
-                setCurrentUser={setCurrentUser}
-                setShowAuth={setShowAuth}
-                setGoal={setGoal}
-                setMeals={setMeals}
-                setNotifications={setNotifications}
-            />
-            <NavigationTabs
-                tabs={tabs}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-            />
+        <AuthProvider>
+            <div className="min-h-screen bg-gray-50">
+                <Header
+                    currentUser={currentUser}
+                    setCurrentUser={setCurrentUser}
+                    setShowAuth={setShowAuth}
+                    setGoal={setGoal}
+                    setMeals={setMeals}
+                    setNotifications={setNotifications}
+                    setIsSignup={setIsSignUp}
+                />
+                <NavigationTabs
+                    tabs={tabs}
+                    activeTab={activeTab}
+                    setActiveTab={setActiveTab}
+                />
 
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {activeTab === 'dashboard' && renderDashboard()}
-                {activeTab === 'analytics' && renderAnalytics()}
-                {activeTab === 'recommendations' && renderRecommendations()}
-                {activeTab === 'goals' && renderGoals()}
-            </main>
+                <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    {activeTab === 'dashboard' && renderDashboard()}
+                    {activeTab === 'analytics' && renderAnalytics()}
+                    {activeTab === 'recommendations' && renderRecommendations()}
+                    {activeTab === 'goals' && renderGoals()}
+                </main>
 
-            {showMealModal && renderMealsAdditionModal()}
+                {showMealModal && renderMealsAdditionModal()}
 
-        </div>
-
+            </div>
+        </AuthProvider>
 
     )
 }

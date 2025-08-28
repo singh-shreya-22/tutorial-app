@@ -3,5 +3,4 @@ export default interface GoalDetails {
   dailyCalories: number;
   currentWeight: number;
   targetWeight: number;
-  protein?: number;
 }

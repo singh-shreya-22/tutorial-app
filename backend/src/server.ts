@@ -1,11 +1,13 @@
 import express from 'express';
 import AuthenticationOperations from './authOperations.ts';
+import GoalOperations from './goalOperations.ts';
 const app = express();
 const PORT = 3000;
 import cors from 'cors';
 import { AuthenticationError} from './error.ts';
 
 const authOps = new AuthenticationOperations();
+const goalOps = new GoalOperations();
 
 app.use(express.json());
 app.use(cors({
@@ -20,9 +22,40 @@ app.get('/', (req, res) => {
   res.send('Hello from TypeScript Express 🚀');
 });
 
-// app.post("/", (req, res) => {
-//   console.log("Received request with body ",req.body);  
-// });
+app.post("/goals/get", async(req, res) =>{
+  console.log("Received request with body ", req.body);
+  const {userId} = req.body;
+  try{
+    const response = await goalOps.handleGetGoal(userId)
+    res.status(200).json({
+      type: response.type, 
+      dailyCalories: response.dailyCalories,
+      currentWeight: response.currentWeight,
+      targetWeight: response.targetWeight
+    })
+  }
+  catch(error){
+    if (error instanceof AuthenticationError){
+      res.status(error.statusCode).json({message: error.message})
+    }
+    else
+      res.status(500).json({message: "Internal Server Error"})
+  }
+})
+
+app.post("/goals/set", async (req, res) => {
+  console.log("Received request with body ",req.body); 
+  const {type, dailyCalories, currentWeight, targetWeight, userId} = req.body;
+  try{
+    await goalOps.handleSetGoal(type, dailyCalories, currentWeight, targetWeight, userId);
+    res.status(200).json({message: "Goal set successfully."})
+  }
+  catch(error){
+    if(error instanceof AuthenticationError){
+      res.status(500).json({message: "Internal Server Error", errorName: error.name, errorMessage: error.message})
+    }
+  }
+});
 
 app.post('/auth/signup', async (req, res) => {
   console.log("Request received");

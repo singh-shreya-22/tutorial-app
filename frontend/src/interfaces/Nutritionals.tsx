@@ -3,5 +3,4 @@ export default interface NutritionalInfo {
     protein: number;
     carbs: number;
     fat: number;
-    date: string;
 }

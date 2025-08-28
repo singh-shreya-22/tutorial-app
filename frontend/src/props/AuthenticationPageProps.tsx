@@ -4,6 +4,7 @@ import type GoalDetails from "../interfaces/Goal";
 import type Notification from "../interfaces/Notifications";
 import type Meal from "../interfaces/MealDetails";
 import type NutritionalInfo from "../interfaces/Nutritionals";
+import type React from "react";
 
 interface AuthenticationPageProps {
     authForm: AuthForm
@@ -20,6 +21,7 @@ interface GoalSetupModalProps {
     setGoal: React.Dispatch<React.SetStateAction<GoalDetails | null>>;
     setShowGoalSetup: React.Dispatch<React.SetStateAction<boolean>>;
     setNotifications: React.Dispatch<React.SetStateAction<Notification[]>>;
+    currentUser: UserDetails | null
 }
 
 interface DashboardPageProps {
@@ -42,6 +44,9 @@ interface RecommendationsPageProps {
 interface GoalsPageProps {
     goal: GoalDetails | null;
     progress: number;
+    setShowGoalSetup: React.Dispatch<React.SetStateAction<boolean>>;
+    setGoal: React.Dispatch<React.SetStateAction<GoalDetails | null>>;
+    currentUser: UserDetails | null;
 }
 
 interface MealsAdditionModalProps {
